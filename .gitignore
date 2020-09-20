@@ -1,0 +1,10 @@
+#
+#
+#
+bin*/
+build*/
+*.bc
+*.o
+*~
+TAGS
+ETAGS
