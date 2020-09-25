@@ -7,10 +7,14 @@ cmake_minimum_required(VERSION 3.10)
 
 message(STATUS "CMAKE_CXX_COMPILER_ID=${CMAKE_CXX_COMPILER_ID}")
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 macro(make_executables)
-  file(GLOB source_files "*.cpp" "*.c")
+  file(GLOB source_files "*.cpp" )
   foreach(cpp ${source_files})
     get_filename_component(dir ${cpp} DIRECTORY) 
     get_filename_component(dir ${dir} NAME) 

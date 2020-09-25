@@ -7,5 +7,9 @@
    $ cd bin-intel
    $ cmake source-directory -DCMAKE_CXX_COMPILER=icpc
 
-## Login Xeon CPU
+## Login remotely
    $ ssh colfax
+
+## Submit jobs to Xeon CPU
+   $ man qsub
+   $ echo ./hello | qsub
