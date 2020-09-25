@@ -6,3 +6,6 @@
    $ mkdir bin-intel
    $ cd bin-intel
    $ cmake source-directory -DCMAKE_CXX_COMPILER=icpc
+
+## Login Xeon CPU
+   $ ssh colfax
