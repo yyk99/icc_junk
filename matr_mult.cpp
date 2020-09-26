@@ -6,17 +6,39 @@
 
 using namespace std;
 
-//template <class T>
 typedef float T;
+//template <class T>
 void matr_mult(T const *A, T const *B, T *C, size_t N, size_t K, size_t M)
 {
+#if 1
 #pragma ivdep
-#pragma simd 
+#pragma omp simd
+#endif
     for(size_t i = 0 ; i != N ; ++i) {
         for (size_t j = 0 ; j != M ; ++j) {
             T s = 0;
             for(size_t k = 0 ; k != K ; ++k) {
                 // A[i,k] * B[k,j]
+                s += A[i * K + k] * B[k * M + j];
+            }
+            // C[i,j] = ...
+            C[i*K + j] = s;
+        }
+    }
+}
+
+//template <class T>
+void matr_mult_transposed(T const *A, T const *B, T *C, size_t N, size_t K, size_t M)
+{
+#if 1
+#pragma ivdep
+#pragma omp simd
+#endif
+    for(size_t i = 0 ; i != N ; ++i) {
+        for (size_t j = 0 ; j != M ; ++j) {
+            T s = 0;
+            for(size_t k = 0 ; k != K ; ++k) {
+                // A[i,k] * B[j, k]
                 s += A[i * K + k] * B[k * M + j];
             }
             // C[i,j] = ...
@@ -39,6 +61,7 @@ void print_as_matr(T const *M, size_t rows, size_t colls, char const *title)
         for(size_t j = 0 ; j != colls ; ++j) {
             printf("%g ", (double)M[i * colls + j]);
         }
+        printf("\n");
     }
 }
 
@@ -73,7 +96,7 @@ int main()
     }
 #if 1
     {
-        int N = 1000, K = 1000, M =1000;
+        int N = 2000, K = 2000, M =2000;
         
         float *A = one(N*K);
         print_as_matr(A, N, K, "A:");
