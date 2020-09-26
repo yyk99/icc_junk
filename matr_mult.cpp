@@ -28,21 +28,19 @@ void matr_mult(T const *A, T const *B, T *C, size_t N, size_t K, size_t M)
 }
 
 //template <class T>
+typedef float T;
 void matr_mult_transposed(T const *A, T const *B, T *C, size_t N, size_t K, size_t M)
 {
-#if 1
 #pragma ivdep
-#pragma omp simd
-#endif
     for(size_t i = 0 ; i != N ; ++i) {
         for (size_t j = 0 ; j != M ; ++j) {
             T s = 0;
             for(size_t k = 0 ; k != K ; ++k) {
                 // A[i,k] * B[j, k]
-                s += A[i * K + k] * B[k * M + j];
+                s += A[i * K + k] * B[j * K + k];
             }
             // C[i,j] = ...
-            C[i*K + j] = s;
+            C[i*M + j] = s;
         }
     }
 }
@@ -89,11 +87,48 @@ int main()
 
         Timer t;
         t.start();
-        matr_mult(A, B, C, N, K, M);
+        matr_mult_transposed(A, B, C, N, K, M);
         t.stop();
         print_as_matr(C, N, M, "C:");
         printf("Elapsed: %g sec.\n", t.elapsed());
     }
+    {
+        int N = 5, K = 2, M = 5;
+        
+        float *A = one(N*K);
+        print_as_matr(A, N, K, "A:");
+        float *B = one(K*M);
+        print_as_matr(B, M, K, "B:");
+        
+        float *C = new float[N*M];
+
+        Timer t;
+        t.start();
+        matr_mult_transposed(A, B, C, N, K, M);
+        t.stop();
+        print_as_matr(C, N, M, "C:");
+        printf("Elapsed: %g sec.\n", t.elapsed());
+
+    }
+    {
+        int N = 2, K = 5, M = 3;
+        
+        float *A = one(N*K);
+        print_as_matr(A, N, K, "A:");
+        float *B = one(K*M);
+        print_as_matr(B, M, K, "B:");
+        
+        float *C = new float[N*M];
+
+        Timer t;
+        t.start();
+        matr_mult_transposed(A, B, C, N, K, M);
+        t.stop();
+        print_as_matr(C, N, M, "C:");
+        printf("Elapsed: %g sec.\n", t.elapsed());
+
+    }
+
 #if 1
     {
         int N = 2000, K = 2000, M =2000;
@@ -107,7 +142,7 @@ int main()
 
         Timer t;
         t.start();
-        matr_mult(A, B, C, N, K, M);
+        matr_mult_transposed(A, B, C, N, K, M);
         t.stop();
         print_as_matr(C, N, M, "C:");
         printf("Elapsed: %g sec.\n", t.elapsed());

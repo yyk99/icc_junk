@@ -21,12 +21,22 @@ macro(make_executables)
     get_filename_component(prog ${cpp} NAME_WE) 
     get_filename_component(src ${cpp} NAME)
 
+    # Target 1
     set (target "${dir}_${prog}")
     message(STATUS "add_executable(${target} ${src})")
     add_executable(${target} ${src})
     target_compile_options(${target} PRIVATE "-Wall")
     target_compile_options(${target} PRIVATE "-qopt-report")
-#   target_compile_options(${target} PRIVATE "-xMIC-AVX512")
+
+    # Target 2
+    set (target "${dir}_${prog}_x512")
+    message(STATUS "add_executable(${target} ${src})")
+    add_executable(${target} ${src})
+    target_compile_options(${target} PRIVATE "-Wall")
+    target_compile_options(${target} PRIVATE "-qopt-report")
+    target_compile_options(${target} PRIVATE "-xMIC-AVX512")
+
+
 #   target_link_libraries(${target} PRIVATE Threads::Threads)
   endforeach()
 endmacro(make_executables)
