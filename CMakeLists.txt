@@ -26,15 +26,28 @@ macro(make_executables)
     message(STATUS "add_executable(${target} ${src})")
     add_executable(${target} ${src})
     target_compile_options(${target} PRIVATE "-Wall")
-    target_compile_options(${target} PRIVATE "-qopt-report")
+    target_compile_options(${target} PRIVATE "-qopenmp")
+    target_link_libraries(${target} PRIVATE "-qopenmp")
+    target_compile_options(${target} PRIVATE "-qopt-report=5")
 
     # Target 2
     set (target "${dir}_${prog}_x512")
     message(STATUS "add_executable(${target} ${src})")
     add_executable(${target} ${src})
     target_compile_options(${target} PRIVATE "-Wall")
-    target_compile_options(${target} PRIVATE "-qopt-report")
+    target_compile_options(${target} PRIVATE "-qopt-report=5")
+    target_compile_options(${target} PRIVATE "-qopenmp")
+    target_link_libraries(${target} PRIVATE "-qopenmp")
     target_compile_options(${target} PRIVATE "-xMIC-AVX512")
+
+    # Target 3
+    set (target "${dir}_${prog}_novec")
+    message(STATUS "add_executable(${target} ${src})")
+    add_executable(${target} ${src})
+    target_compile_options(${target} PRIVATE "-Wall")
+    target_compile_options(${target} PRIVATE "-qopt-report=5")
+    target_compile_options(${target} PRIVATE "-qno-openmp")
+    target_compile_options(${target} PRIVATE "-no-vec")
 
 
 #   target_link_libraries(${target} PRIVATE Threads::Threads)
@@ -45,14 +58,7 @@ endmacro(make_executables)
 
 make_executables()
 
-#add_executable(autovec autovec.cpp)
-#target_compile_options(autovec PRIVATE -qopt-report)
-#target_compile_options(${target} PRIVATE "-Wall")
+configure_file(matr_mult_proj.cmake matr_mult_proj)
 
-#add_executable(autovec2 autovec2.cpp)
-#target_compile_options(autovec2 PRIVATE -qopt-report)
-
-#add_executable(matr_mult matr_mult.cpp)
-#target_compile_options(autovec2 PRIVATE -qopt-report)
 
 # end of file

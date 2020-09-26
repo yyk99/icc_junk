@@ -31,10 +31,10 @@ void matr_mult(T const *A, T const *B, T *C, size_t N, size_t K, size_t M)
 typedef float T;
 void matr_mult_transposed(T const *A, T const *B, T *C, size_t N, size_t K, size_t M)
 {
-#pragma ivdep
     for(size_t i = 0 ; i != N ; ++i) {
         for (size_t j = 0 ; j != M ; ++j) {
             T s = 0;
+            //#pragma simd
             for(size_t k = 0 ; k != K ; ++k) {
                 // A[i,k] * B[j, k]
                 s += A[i * K + k] * B[j * K + k];
@@ -73,15 +73,20 @@ T *one(size_t n)
 }
 
 #include "timer.h"
+
+bool verbose = false;
+
 int main()
 {
     {
         const int N = 3, K = 3, M =3;
         
         float A[] = {1, 0, 0, 0, 2, 0, 0, 0, 3};
-        print_as_matr(A, N, K, "A:");
+        if(verbose)
+            print_as_matr(A, N, K, "A:");
         float B[] =  {1, 0, 0, 0, 1, 0, 0, 0, 1};
-        print_as_matr(B, K, M, "B:");
+        if(verbose)
+            print_as_matr(B, K, M, "B:");
         
         float C[N*M];
 
@@ -89,16 +94,19 @@ int main()
         t.start();
         matr_mult_transposed(A, B, C, N, K, M);
         t.stop();
-        print_as_matr(C, N, M, "C:");
+        if(verbose)
+            print_as_matr(C, N, M, "C:");
         printf("Elapsed: %g sec.\n", t.elapsed());
     }
     {
         int N = 5, K = 2, M = 5;
         
         float *A = one(N*K);
-        print_as_matr(A, N, K, "A:");
+        if(verbose)
+            print_as_matr(A, N, K, "A:");
         float *B = one(K*M);
-        print_as_matr(B, M, K, "B:");
+        if(verbose)
+            print_as_matr(B, M, K, "B:");
         
         float *C = new float[N*M];
 
@@ -106,7 +114,8 @@ int main()
         t.start();
         matr_mult_transposed(A, B, C, N, K, M);
         t.stop();
-        print_as_matr(C, N, M, "C:");
+        if(verbose)
+            print_as_matr(C, N, M, "C:");
         printf("Elapsed: %g sec.\n", t.elapsed());
 
     }
@@ -114,9 +123,11 @@ int main()
         int N = 2, K = 5, M = 3;
         
         float *A = one(N*K);
-        print_as_matr(A, N, K, "A:");
+        if(verbose)
+            print_as_matr(A, N, K, "A:");
         float *B = one(K*M);
-        print_as_matr(B, M, K, "B:");
+        if(verbose)
+            print_as_matr(B, M, K, "B:");
         
         float *C = new float[N*M];
 
@@ -124,7 +135,8 @@ int main()
         t.start();
         matr_mult_transposed(A, B, C, N, K, M);
         t.stop();
-        print_as_matr(C, N, M, "C:");
+        if(verbose)
+            print_as_matr(C, N, M, "C:");
         printf("Elapsed: %g sec.\n", t.elapsed());
 
     }
@@ -134,9 +146,11 @@ int main()
         int N = 2000, K = 2000, M =2000;
         
         float *A = one(N*K);
-        print_as_matr(A, N, K, "A:");
+        if(verbose)
+            print_as_matr(A, N, K, "A:");
         float *B = one(K*M);
-        print_as_matr(B, K, M, "B:");
+        if(verbose)
+            print_as_matr(B, K, M, "B:");
         
         float *C = new float[N*M];
 
@@ -144,8 +158,9 @@ int main()
         t.start();
         matr_mult_transposed(A, B, C, N, K, M);
         t.stop();
-        print_as_matr(C, N, M, "C:");
-        printf("Elapsed: %g sec.\n", t.elapsed());
+        if(verbose)
+            print_as_matr(C, N, M, "C:");
+        printf("Elapsed: (%d,%d,%d) %g sec.\n", N, K, M, t.elapsed());
 
     }
 #endif
