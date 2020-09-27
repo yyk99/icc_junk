@@ -6,10 +6,11 @@
    $ mkdir bin-intel
    $ cd bin-intel
    $ cmake source-directory -DCMAKE_CXX_COMPILER=icpc
+   $ qsub matr_mult_proj
 
 ## Login remotely
    $ ssh colfax
 
 ## Submit jobs to Xeon CPU
    $ man qsub
-   $ echo ./hello | qsub
+   $ realpath ./hello | qsub

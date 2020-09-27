@@ -27,6 +27,10 @@ void matr_mult(T const *A, T const *B, T *C, size_t N, size_t K, size_t M)
     }
 }
 
+//
+// A * transpose(B)
+//
+
 //template <class T>
 typedef float T;
 void matr_mult_transposed(T const *A, T const *B, T *C, size_t N, size_t K, size_t M)
@@ -143,8 +147,11 @@ int main()
 
 #if 1
     {
-        int N = 2000, K = 2000, M =2000;
+        int N = 1000, K = 2000, M =2000;
         
+        
+        int n_try = 5;
+
         float *A = one(N*K);
         if(verbose)
             print_as_matr(A, N, K, "A:");
@@ -154,13 +161,19 @@ int main()
         
         float *C = new float[N*M];
 
-        Timer t;
-        t.start();
-        matr_mult_transposed(A, B, C, N, K, M);
-        t.stop();
-        if(verbose)
-            print_as_matr(C, N, M, "C:");
-        printf("Elapsed: (%d,%d,%d) %g sec.\n", N, K, M, t.elapsed());
+        double results[n_try];
+        for(int i = 0 ; i < n_try ; ++i) {
+
+            Timer t;
+            t.start();
+            matr_mult_transposed(A, B, C, N, K, M);
+            t.stop();
+            if(verbose)
+                print_as_matr(C, N, M, "C:");
+            results[i] = t.elapsed();
+        }
+        for(int i = 0 ; i < n_try ; ++i)
+            printf("Elapsed: (%d,%d,%d) %g sec.\n", N, K, M, results[i]);
 
     }
 #endif
