@@ -38,8 +38,6 @@ int main()
         
         float *A = one(N);
         float *B = one(N);
-        
-        float *C = new float[N];
 
         Timer t;
         t.start();

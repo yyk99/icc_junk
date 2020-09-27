@@ -10,9 +10,9 @@ typedef float T;
 //template <class T>
 void matr_mult(T const *A, T const *B, T *C, size_t N, size_t K, size_t M)
 {
-#if 1
-#pragma ivdep
-#pragma omp simd
+#if _ICC
+#    pragma ivdep
+#    pragma omp simd
 #endif
     for(size_t i = 0 ; i != N ; ++i) {
         for (size_t j = 0 ; j != M ; ++j) {
