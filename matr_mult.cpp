@@ -77,11 +77,30 @@ T *one(size_t n)
 }
 
 #include "timer.h"
+#include <stdio.h>     /* for printf */
+#include <stdlib.h>    /* for exit */
+#include <getopt.h>
 
 bool verbose = false;
+int n_try = 5;
 
-int main()
+int main(int argc, char **argv)
 {
+    int opt = 0;
+    while ((opt = getopt(argc, argv, "n:v")) != -1) {
+        switch (opt) {
+        case 'v':
+            verbose = true;
+            break;
+        case 'n':
+            n_try = atoi(optarg);
+            break;
+        default: /* '?' */
+            fprintf(stderr, "Usage: %s [-n n_try] [-v]\n", argv[0]);
+            exit(EXIT_FAILURE);
+        }
+    }
+
     {
         const int N = 3, K = 3, M =3;
         
@@ -150,7 +169,6 @@ int main()
         int N = 1000, K = 2000, M =2000;
         
         
-        int n_try = 5;
 
         float *A = one(N*K);
         if(verbose)
