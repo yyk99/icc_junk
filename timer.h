@@ -8,16 +8,21 @@
 #include <chrono>
 
 class Timer {
-    std::chrono::time_point<std::chrono::system_clock> _start; // = chrono::high_resolution_clock::now();
-    std::chrono::time_point<std::chrono::system_clock> _stop;   // = chrono::high_resolution_clock::now();
+    using the_clock = std::chrono::steady_clock;
+    static std::chrono::time_point<the_clock> now () {
+        return the_clock::now();
+    }
+    
+    std::chrono::time_point<the_clock> _start; // = chrono::high_resolution_clock::now();
+    std::chrono::time_point<the_clock> _stop;   // = chrono::high_resolution_clock::now();
 
 public:
     void start() {
-        _start = std::chrono::high_resolution_clock::now();
+        _start = now();
     }
 
     void stop() {
-        _stop = std::chrono::high_resolution_clock::now();
+        _stop = now();
     }
     
     /// returns elapsed time in seconds
