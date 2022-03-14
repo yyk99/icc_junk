@@ -20,4 +20,4 @@
 ## Setup environment at Windows
 
 	- start Developer command prompt for VS2017
-	$ cmake "c:\Program Files\CMake\bin\cmake.exe" .. -G "Visual Studio 15 2017" -A x64 -T "Intel C++ Compiler 19.1"
+	$ "c:\Program Files\CMake\bin\cmake.exe" .. -G "Visual Studio 15 2017" -A x64 -T "Intel C++ Compiler 19.1"
