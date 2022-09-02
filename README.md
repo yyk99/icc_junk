@@ -15,9 +15,12 @@
    $ man qsub
    $ realpath ./hello | qsub
    
-   
-   
 ## Setup environment at Windows
 
 	- start Developer command prompt for VS2017
-	$ cmake "c:\Program Files\CMake\bin\cmake.exe" .. -G "Visual Studio 15 2017" -A x64 -T "Intel C++ Compiler 19.1"
+	$ "c:\Program Files\CMake\bin\cmake.exe" .. -G "Visual Studio 15 2017" -A x64 -T "Intel C++ Compiler 19.1"
+
+	Updated on 6/20/2022
+	# Intel(R) oneAPI DPC++/C++ Compiler for applications running on Intel(R) 64, Version 2022.1.0 Build 20220316
+
+	$ "c:\Program Files\CMake\bin\cmake.exe" .. -G "Visual Studio 16 2019" -A x64 -T "Intel C++ Compiler 2022" -DCMAKE_CXX_COMPILER="icx"
