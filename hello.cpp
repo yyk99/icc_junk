@@ -7,8 +7,9 @@
 #endif
 
 #include <thread>
+#include <iostream>
 
-int main() 
+int main()
 {
 #if _WIN32
     int iResult;
@@ -22,11 +23,27 @@ int main()
     }
 #endif
 
-  char hostname[100];
-  int ncpus;
+    char hostname[100];
+    int ncpus;
 
-  gethostname(hostname, sizeof(hostname));
-  ncpus = std::thread::hardware_concurrency();
+    gethostname( hostname, sizeof( hostname ) );
+    ncpus = std::thread::hardware_concurrency();
 
-  printf("Host %s has %d CPU(s)\n", hostname, ncpus);
+    printf( "Host %s has %d CPU(s)\n", hostname, ncpus );
+#if defined(__INTEL_LLVM_COMPILER)
+    std::cout << "__INTEL_COMPILER: " << __INTEL_LLVM_COMPILER << "\n";
+#endif
+#if defined(__VERSION)
+    std::cout << "__VERSION: " << __VERSION << "\n";
+#endif
+    // dpcpp only
+#if defined(SYCL_LANGUAGE_VERSION) && defined (__INTEL_LLVM_COMPILER)
+   // code specific for DPC++ compiler below
+   // ... ...
+
+   // example only
+    std::cout << "SYCL_LANGUAGE_VERSION: " << SYCL_LANGUAGE_VERSION << std::endl;
+    std::cout << "__INTEL_LLVM_COMPILER: " << __INTEL_LLVM_COMPILER << std::endl;
+    std::cout << "__VERSION__: " << __VERSION__ << std::endl;
+#endif
 }
