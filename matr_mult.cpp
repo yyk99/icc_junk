@@ -79,7 +79,17 @@ T *one(size_t n)
 #include "timer.h"
 #include <stdio.h>     /* for printf */
 #include <stdlib.h>    /* for exit */
-#include <getopt.h>
+#if _WIN32
+int getopt(int argc, char **argv, const char *opt)
+{
+    return -1;
+}
+
+char *optarg = 0;
+
+#else
+#   include <getopt.h>
+#endif
 
 bool verbose = false;
 int n_try = 5;

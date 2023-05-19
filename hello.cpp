@@ -1,12 +1,49 @@
 #include <cstdio>
-#include <unistd.h>
+#if __has_include (<unistd.h>)
+#   include <unistd.h>
+#else
+#   include <winsock.h>
+#   pragma comment(lib, "ws2_32.lib")
+#endif
 
-int main() {
-  char hostname[100];
-  int ncpus;
+#include <thread>
+#include <iostream>
 
-  gethostname(hostname, sizeof(hostname));
-  ncpus = sysconf(_SC_NPROCESSORS_ONLN);
+int main()
+{
+#if _WIN32
+    int iResult;
+    WSADATA wsaData;
 
-  printf("Host %s has %d CPU(s)\n", hostname, ncpus);
+    // Initialize Winsock
+    iResult = WSAStartup( MAKEWORD( 2, 2 ), &wsaData );
+    if ( iResult != 0 ) {
+        printf( "WSAStartup failed: %d\n", iResult );
+        return 1;
+    }
+#endif
+
+    char hostname[100];
+    int ncpus;
+
+    gethostname( hostname, sizeof( hostname ) );
+    ncpus = std::thread::hardware_concurrency();
+
+    printf( "Host %s has %d CPU(s)\n", hostname, ncpus );
+#if defined(__INTEL_LLVM_COMPILER)
+    std::cout << "__INTEL_COMPILER: " << __INTEL_LLVM_COMPILER << "\n";
+#endif
+#if defined(__VERSION)
+    std::cout << "__VERSION: " << __VERSION << "\n";
+#endif
+    // dpcpp only
+#if defined(SYCL_LANGUAGE_VERSION) && defined (__INTEL_LLVM_COMPILER)
+   // code specific for DPC++ compiler below
+   // ... ...
+
+   // example only
+    std::cout << "SYCL_LANGUAGE_VERSION: " << SYCL_LANGUAGE_VERSION << std::endl;
+    std::cout << "__INTEL_LLVM_COMPILER: " << __INTEL_LLVM_COMPILER << std::endl;
+    std::cout << "__VERSION__: " << __VERSION__ << std::endl;
+#endif
 }
